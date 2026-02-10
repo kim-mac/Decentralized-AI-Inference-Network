@@ -1,0 +1,24 @@
+{
+  "tasks_completed": 7,
+  "reputation": {
+    "peer1": 3,
+    "peer2": 3,
+    "peer3": 3,
+    "peer4": 1
+  },
+  "active_peers": [
+    "peer1",
+    "peer2",
+    "peer3",
+    "peer4"
+  ],
+  "consensus_history": [
+    7,
+    2,
+    5,
+    7,
+    7,
+    2,
+    7
+  ]
+}

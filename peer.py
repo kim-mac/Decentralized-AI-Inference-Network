@@ -4,6 +4,7 @@ import json
 import onnxruntime as ort
 import numpy as np
 from PIL import Image
+from io import BytesIO
 
 MODEL_PATH = "mnist.onnx"
 
@@ -12,8 +13,6 @@ input_name = session.get_inputs()[0].name
 
 
 def preprocess(image_bytes):
-    from io import BytesIO
-
     img = Image.open(BytesIO(image_bytes)).convert("L").resize((28, 28))
     arr = np.array(img).astype(np.float32) / 255.0
     arr = arr.reshape(1, 1, 28, 28)
@@ -29,7 +28,7 @@ def predict(image_bytes):
 
 def handle_task(conn):
     header, image_data = conn.recv(65536).split(b"\n", 1)
-    info = json.loads(header.decode())
+    _ = json.loads(header.decode())
 
     result = predict(image_data)
     conn.sendall(result.encode())
@@ -37,12 +36,11 @@ def handle_task(conn):
 
 
 def start_peer(peer_id, port):
-    # Register with coordinator
+    # Register
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect(("127.0.0.1", 5000))
         s.sendall(json.dumps({"id": peer_id, "port": port}).encode())
 
-    # Listen for tasks
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind(("127.0.0.1", port))
     server.listen()
@@ -59,7 +57,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--id", required=True)
-    parser.add_argument("--port", type=int, default=6000)
+    parser.add_argument("--port", type=int, required=True)
 
     args = parser.parse_args()
 
