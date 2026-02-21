@@ -193,6 +193,3 @@ This repository is a **minimal working prototype** of that future.
 
 ---
 
-# ⭐ If you find this useful
-
-Give the repo a star and feel free to contribute!
